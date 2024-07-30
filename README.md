@@ -21,4 +21,21 @@ Notifications: Provide notifications on flight status changes.
 
 ## Run the application:
 
-- Move into the individual directories to see the steps on running the services.
+First make sure you have docker installed.
+
+## Start postgres via Docker
+
+```bash
+docker run -e POSTGRES_USER=yourusername -ePOSTGRES_DB=yourdatabase -e POSTGRES_PASSWORD=yourpassword -d -p 5432:5432 postgres
+```
+
+- Store this connection url for later requirement. 
+## 
+    ConnectionString: postgresql://yourusername:yourpassword@localhost:5432/yourdatabase
+
+## Start RabbitMQ via Docker
+```bash
+docker run -d --name rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:management
+```
+
+### To start rest of the services move into their respective directories and follow the steps in their readme files.
