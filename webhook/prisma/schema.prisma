@@ -1,0 +1,58 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            Int            @id @default(autoincrement())
+  name          String
+  email         String         @unique
+  password      String
+  phone         String
+  subscriptions Subscription[]
+}
+
+model Flight {
+  id                Int      @id @default(autoincrement())
+  flight_id         String   @unique
+  airline           String
+  status            String
+  departure_gate    String
+  arrival_gate      String
+  scheduled_departure DateTime
+  scheduled_arrival DateTime
+  actual_departure  DateTime?
+  actual_arrival    DateTime?
+  notifications     Notification[]
+  subscriptions     Subscription[]
+}
+
+model Notification {
+  id                Int      @id @default(autoincrement())
+  flight_id         String
+  message           String
+  timestamp         DateTime
+  method            String
+  recipient         String
+  status            String?
+  flight            Flight   @relation(fields: [flight_id], references: [flight_id])
+}
+
+model Subscription {
+  user_id   Int
+  flight_id String
+  @@id([flight_id, user_id]) // Composite primary key
+  user      User     @relation(fields: [user_id], references: [id])
+  flight    Flight   @relation(fields: [flight_id], references: [flight_id])
+}
+
